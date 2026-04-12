@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpeg" href="logo/logo.PNG">
+	<title>Weather App</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px;
+        }
+        .weather {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+    <a href="cinemaplusedited.html" style="color: red; font-weight: bold;"> Home Page </a>
+    <h1 style="color: red;">Weather API</h1>
+    <input type="text" id="city" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div class="weather" id="weatherResult"></div>
+
+    <script>
+        async function getWeather() {
+            const city = document.getElementById('city').value.trim();
+            const resultDiv = document.getElementById('weatherResult');
+
+            if (!city) {
+                resultDiv.textContent = "Kimberely.";
+                return;
+            }
+
+            const apiKey = "597b0d9eeeae3bbf656af1e4bfb5597e"; // Replace with your OpenWeatherMap API key
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`City not found or API error (${response.status})`);
+                }
+
+                const data = await response.json();
+                const { name, main, weather } = data;
+
+                resultDiv.innerHTML = `
+                    <strong>${name}</strong><br>
+                    Temperature: ${main.temp}°C<br>
+                    Condition: ${weather[0].description}
+                `;
+            } catch (error) {
+                resultDiv.textContent = error.message;
+            }
+        }
+    </script>
+</body>
+</html>
